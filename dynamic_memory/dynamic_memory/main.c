@@ -68,19 +68,48 @@ int main () {
 }
 */
 
-/*
+
 char * checkString(char *p, char tav){
+    int counter = 0;
+    char * i = p;
+    while (*i != '\0') {
+        if(*i == tav){
+            counter++;
+        }
+        i++;
+    }
     
-    return p;
+    char * new = calloc(counter+1, sizeof(char));
+    if(new == NULL)return NULL;
+    
+    for (int i = 0; i < counter+1; i++) {
+        if(i == counter) *(new+i) = '\0';
+        else *(new+i) = tav;
+    }
+    return new;
 }
 
 
 int main () {
-    char * string;
-    printf("%s\n", string);
-}
-*/
+    char string[] = "kjwbfjbweobofjboobg";
+    char tav = 'o';
+    
+    char *new = checkString(string, tav);
+    if(new == NULL)return 1;
 
+    char * i = new;
+    while (*i != '\0') {
+        printf("%c ", *i);
+        i++;
+    }
+    
+    return 0;
+    
+}
+
+
+
+/*
 int * combineArrays(int * p, int *p1, int size, int size1){
     int *new = calloc(size+size1, sizeof(int));
     
@@ -110,3 +139,4 @@ int main () {
         printf("%d ", *i);
     }
 }
+*/
