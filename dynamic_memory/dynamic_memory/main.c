@@ -69,6 +69,9 @@ int main () {
 */
 
 
+//new exercise presentation:
+/*
+
 char * checkString(char *p, char tav){
     int counter = 0;
     char * i = p;
@@ -106,6 +109,7 @@ int main () {
     return 0;
     
 }
+ */
 
 
 
@@ -140,3 +144,137 @@ int main () {
     }
 }
 */
+
+//codechef https://www.codechef.com/problems/SUMTRIAN?tab=statement
+/*
+#include <stdio.h>
+#include <stdlib.h>
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
+int main() {
+    
+    int t;
+    scanf("%d", &t);
+    while(t--){
+        int n;
+  scanf("%d", &n);
+
+  // allocate and read the triangle
+  int** triangle = (int**) malloc(n * sizeof(int*));
+  for (int i = 0; i < n; i++) {
+    triangle[i] = (int*) malloc((i + 1) * sizeof(int));
+    for (int j = 0; j <= i; j++) {
+      scanf("%d", &triangle[i][j]);
+    }
+  }
+
+  // compute the maximum sum
+  for (int i = n - 2; i >= 0; i--) {
+    for (int j = 0; j <= i; j++) {
+      triangle[i][j] += max(triangle[i + 1][j], triangle[i + 1][j + 1]);
+    }
+  }
+  int maximum_sum = triangle[0][0];
+
+  // free memory
+  for (int i = 0; i < n; i++) {
+    free(triangle[i]);
+  }
+  free(triangle);
+
+  printf("%d\n", maximum_sum);
+    }
+  
+  return 0;
+}
+*/
+
+//exercise from 03.01 with Arye
+
+struct student {
+    char name[20];
+    int id;
+} typedef student_t;
+
+struct class{
+    char teacher[20];
+    int studentsTotal;
+    int registeredStudents;
+    student_t ** students;
+}typedef class_t;
+
+struct school{
+    char name[20];
+    int classesTotal;
+    int registeredClasses;
+    class_t ** classes;
+}typedef school_t;
+
+int main () {
+    int flag = 0, flag2 = 0;
+    char answer;
+    
+    school_t s = {"Noam"};
+    printf("How many classes?\n");
+    scanf("%d", &s.classesTotal);
+    s.classes = (class_t**)malloc(sizeof(class_t*) * s.classesTotal);
+    if(s.classes == NULL){
+        printf("failed\n");
+        return 0;
+    }
+    
+    do{
+        if(s.registeredClasses == s.classesTotal){
+            printf("You've reached the maximum amount of classes!\n");
+            break;
+        }
+        printf("Register a Class (Y/N)?\n");
+        fflush(0);
+        scanf("%c", &answer);
+
+        if (answer == 'N') flag = 1;
+        
+        else{
+        s.classes[s.registeredClasses] = (class_t*)calloc(1, sizeof(class_t));
+
+        printf("Enter name of teacher and number of students:\n");
+        scanf("%s %d", s.classes[s.registeredClasses] -> teacher, &s.classes[s.registeredClasses] -> studentsTotal);
+            
+            printf("Now we are going to declare the students:\n");
+            flag2 = 0;
+            s.classes[s.registeredClasses] -> students = (student_t**)calloc(s.classes[s.registeredClasses] -> studentsTotal, sizeof(student_t));
+            if( s.classes[s.registeredClasses] -> students == NULL){
+                printf("failed\n");
+                return 0;
+            }
+
+            do{
+                if (s.classes[s.registeredClasses] -> registeredStudents == s.classes[s.registeredClasses] -> studentsTotal){
+                printf("Class is full!\n");
+                break;
+                }
+
+                printf("Register a student (Y/N)? ");
+                scanf("%c", &answer);
+                if (answer == 'N')
+                flag2 = 1;
+                
+                else{
+                    
+                printf("Enter name and id: ");
+                    fflush(0);
+                    scanf("%s %d", s.classes[s.registeredClasses] -> students[s.classes[s.registeredClasses] -> registeredStudents] -> name, &s.classes[s.registeredClasses] -> students[s.classes[s.registeredClasses] -> registeredStudents] -> id);
+
+                    s.classes[s.registeredClasses] -> registeredStudents++;
+                }
+                
+            } while(flag2 == 0);
+                
+        s.registeredClasses++;
+        }
+
+    } while (flag == 0);
+        
+    
+}
