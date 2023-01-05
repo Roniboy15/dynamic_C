@@ -192,6 +192,7 @@ int main() {
 
 //exercise from 03.01 with Arye
 
+/*
 struct student {
     char name[20];
     int id;
@@ -218,11 +219,12 @@ int main () {
     school_t s = {"Noam"};
     printf("How many classes?\n");
     scanf("%d", &s.classesTotal);
-    s.classes = (class_t**)malloc(sizeof(class_t*) * s.classesTotal);
+    s.classes = (class_t**)calloc(sizeof(class_t*), s.classesTotal);
     if(s.classes == NULL){
         printf("failed\n");
         return 0;
     }
+    
     
     do{
         if(s.registeredClasses == s.classesTotal){
@@ -233,40 +235,51 @@ int main () {
         fflush(0);
         scanf("%c", &answer);
 
-        if (answer == 'N') flag = 1;
+        if (answer == 'N' || answer == 'n') flag = 1;
         
         else{
         s.classes[s.registeredClasses] = (class_t*)calloc(1, sizeof(class_t));
 
         printf("Enter name of teacher and number of students:\n");
         scanf("%s %d", s.classes[s.registeredClasses] -> teacher, &s.classes[s.registeredClasses] -> studentsTotal);
-            
+            fflush(0);
+
             printf("Now we are going to declare the students:\n");
             flag2 = 0;
-            s.classes[s.registeredClasses] -> students = (student_t**)calloc(s.classes[s.registeredClasses] -> studentsTotal, sizeof(student_t));
-            if( s.classes[s.registeredClasses] -> students == NULL){
+            class_t c;
+            strcpy(c.teacher, s.classes[s.registeredClasses] -> teacher);
+            c.studentsTotal = s.classes[s.registeredClasses] -> studentsTotal;
+            c.registeredStudents = 0;
+            c.students = (student_t **)calloc(sizeof(student_t*), c.studentsTotal);
+                        
+            if( c.students == NULL){
                 printf("failed\n");
                 return 0;
             }
-
+            s.classes[s.registeredClasses] -> students = c.students;
+           
+            
             do{
-                if (s.classes[s.registeredClasses] -> registeredStudents == s.classes[s.registeredClasses] -> studentsTotal){
+                if (c.registeredStudents == c.studentsTotal){
                 printf("Class is full!\n");
                 break;
                 }
 
                 printf("Register a student (Y/N)? ");
                 scanf("%c", &answer);
-                if (answer == 'N')
+                if (answer == 'N' || answer == 'n')
                 flag2 = 1;
                 
                 else{
-                    
+                c.students[c.registeredStudents] = (student_t*)calloc(1, sizeof(student_t));
+
                 printf("Enter name and id: ");
                     fflush(0);
-                    scanf("%s %d", s.classes[s.registeredClasses] -> students[s.classes[s.registeredClasses] -> registeredStudents] -> name, &s.classes[s.registeredClasses] -> students[s.classes[s.registeredClasses] -> registeredStudents] -> id);
+                    scanf("%s %d", c.students[c.registeredStudents] -> name, &c.students[c.registeredStudents] -> id);
+                    fflush(0);
 
-                    s.classes[s.registeredClasses] -> registeredStudents++;
+                    c.registeredStudents++;
+                    
                 }
                 
             } while(flag2 == 0);
@@ -278,3 +291,42 @@ int main () {
         
     
 }
+*/
+
+//experiment
+/*
+#include <stdio.h>
+#include <string.h>
+#include "microhttpd.h.c"
+
+#define PORT 8888
+
+const char *response_template = "Hello, %s!";
+
+int handle_request(void *cls, struct MHD_Connection *connection,
+                   const char *url, const char *method,
+                   const char *version, const char *upload_data,
+                   size_t *upload_data_size, void **ptr) {
+  const char *name = MHD_lookup_connection_value(connection, MHD_GET_ARGUMENT_KIND, "name");
+  if (name == NULL) {
+    name = "World";
+  }
+  char response[strlen(response_template) + strlen(name) - 1];
+  sprintf(response, response_template, name);
+  struct MHD_Response *mhd_response = MHD_create_response_from_buffer(strlen(response), response, MHD_RESPMEM_MUST_COPY);
+  int ret = MHD_queue_response(connection, MHD_HTTP_OK, mhd_response);
+  MHD_destroy_response(mhd_response);
+  return ret;
+}
+
+int main() {
+  struct MHD_Daemon *daemon = MHD_start_daemon(MHD_USE_THREAD_PER_CONNECTION, PORT, NULL, NULL,
+                                                &handle_request, NULL, MHD_OPTION_END);
+  if (daemon == NULL) {
+    return 1;
+  }
+  getchar();
+  MHD_stop_daemon(daemon);
+  return 0;
+}
+*/
